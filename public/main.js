@@ -430,7 +430,7 @@
     ctx.save();
     ctx.textAlign = 'right'; ctx.textBaseline = 'alphabetic';
     ctx.font = '500 26px Fredoka'; ctx.fillStyle = C.ink;
-    ctx.fillText('issued at peak-passport.vercel.app', 1724, 880);
+    ctx.fillText('issued at peak-passport.pages.dev', 1724, 880);
     ctx.restore();
   }
 
@@ -456,7 +456,7 @@
   // ---------- story export ----------
   // 1080x1920 portrait for Instagram/TikTok stories. Content stays inside
   // y 250..1670 so the app's top bar and reply box don't cover it.
-  const SW = 1080, SH = 1920, URL_TXT = 'peak-passport.vercel.app';
+  const SW = 1080, SH = 1920, URL_TXT = 'peak-passport.pages.dev';
   const scoutName = () => S.name.trim() || 'Scout';
 
   function dots(s, color, step = 22, r = 2.4) {

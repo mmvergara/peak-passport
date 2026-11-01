@@ -2,6 +2,8 @@
 
 <p align="center">make your own little scout passport 🏔️🎒</p>
 
+<p align="center"><a href="https://peak-passport.pages.dev"><b>peak-passport.pages.dev</b></a></p>
+
 ---
 
 Upload your scout pic, write your name, pick your ascent sash, stamp the biomes you've climbed, and download a cozy PNG passport to show off.
@@ -13,20 +15,31 @@ Upload your scout pic, write your name, pick your ascent sash, stamp the biomes 
 - 🎀 **Pick your ascent**: the badge takes your sash color, from Tadpole all the way to Scoutmaster.
 - 🗺️ **Collect stamps**: Shore, Tropics, Roots, Alpine, Mesa, Caldera, Gloom, The Kiln, The Citadel, Peak, plus the secret Tomb and Nadir 👀
 - 💾 **Download or copy** your finished passport as a PNG.
+- 📱 **Share to your story**: pick a 9:16 layout (Paper, Summit, Ascent) and post it straight to Instagram.
 
 ## 🧗 Run it
 
-No build step and nothing to install. Just open `index.html` in your browser.
+No build step. The site is three plain files in `public/`. Just open `public/index.html` in your browser.
 
 ```sh
 git clone https://github.com/mmvergara/peak-passport.git
 cd peak-passport
-open index.html   # or xdg-open on linux
+open public/index.html   # or xdg-open on linux
+```
+
+## 🚀 Deploy
+
+Hosted on Cloudflare Pages. Deploys upload only the `public/` folder.
+
+```sh
+npm install
+npx wrangler login   # once
+npm run deploy
 ```
 
 ## 🍃 Notes
 
-Your photo never leaves your browser. Nothing gets uploaded anywhere.
+Your photo never leaves your browser. Nothing gets uploaded anywhere. The site uses cookie-free Cloudflare Web Analytics to count visits.
 
 Unofficial fan project, made with love. Not affiliated with Aggro Crab or Landfall. PEAK and its art belong to them.
 
