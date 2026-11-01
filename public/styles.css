@@ -63,14 +63,14 @@ canvas { display: block; width: 100%; height: auto; border-radius: 16px; touch-a
   50% { transform: scale(1.05); box-shadow: 0 3px 0 var(--blue-d), 0 0 0 10px rgba(91, 147, 220, 0); }
 }
 @media (prefers-reduced-motion: reduce) { .story-btn.nudge { animation: none; } }
-.story-hint { margin: 14px 0 0; }
-.story-hint b { color: var(--blue); font-weight: 600; }
 .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
 .req { font-size: 12px; font-weight: 600; color: #c4433a; text-transform: uppercase; letter-spacing: .04em; margin-left: 4px; }
 .btn.ghost { background: transparent; box-shadow: none; border-color: transparent; color: var(--ink); }
 .btn.small { padding: 8px 12px; font-size: 14px; }
 .btn.dice { padding: 8px; display: grid; place-items: center; align-self: end; height: 46px; width: 46px; }
 .btn.dice svg { width: 24px; height: 24px; fill: currentColor; }
+.btn.icon-btn { padding: 0; width: 48px; flex: none; align-self: stretch; display: grid; place-items: center; color: var(--ink); }
+.btn.icon-btn svg { width: 22px; height: 22px; }
 
 .controls { display: grid; gap: 16px; }
 .card {
@@ -164,7 +164,25 @@ input[type="range"] { width: 100%; accent-color: var(--blue); }
   background: var(--paper-2); border: 2px solid var(--edge); border-radius: 14px; box-shadow: 0 3px 0 var(--edge);
 }
 .story-opt:hover { border-color: var(--blue); }
+.story-opt[aria-checked="true"] { border-color: var(--blue); background: #e3ecf8; box-shadow: 0 3px 0 var(--blue-d); }
+.story-opt[aria-checked="true"] span { color: var(--blue-d); }
+.story-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px; }
+.story-actions .btn { min-width: 120px; }
+@media (max-width: 560px) { .story-actions .btn { flex: 1; } }
 .story-opt:active { transform: translateY(3px); box-shadow: none; }
 .story-opt:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
 .story-opt img { width: 100%; aspect-ratio: 9 / 16; border-radius: 8px; display: block; }
-@media (max-width: 560px) { .story-grid { gap: 8px; } .story-opt { padding: 6px; font-size: 14px; } }
+@media (max-width: 560px) {
+  .story-grid { gap: 8px; } .story-opt { padding: 6px; font-size: 14px; }
+  .actions { flex-wrap: nowrap; gap: 8px; }
+  .actions .btn { padding-left: 14px; padding-right: 14px; }
+  .actions .story-btn { flex: 1 1 auto; justify-content: center; }
+  .actions .btn.icon-btn { padding: 0; }
+  .actions .btn { white-space: nowrap; }
+}
+@media (max-width: 360px) {
+  .actions { gap: 6px; }
+  .actions .btn { font-size: 14px; padding-left: 10px; padding-right: 10px; }
+  .actions .btn.icon-btn { width: 42px; padding: 0; }
+  .story-btn svg { width: 17px; height: 17px; }
+}

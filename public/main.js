@@ -452,10 +452,17 @@
   }
 
   // ---------- export ----------
+  // Save a blob as a file. The link is attached to the page before clicking,
+  // which older Firefox/Safari need for the download to start.
+  function saveBlob(blob, name) {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = name; a.style.display = 'none';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  }
   const fileName = () => `peak-passport-${(S.name.trim() || 'scout').replace(/[^\w-]+/g, '_')}.png`;
   $('download').onclick = () => img && cv.toBlob(b => {
-    const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = fileName(); a.click();
-    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    saveBlob(b, fileName());
   }, 'image/png');
   // ---------- story export ----------
   // 1080x1920 portrait for Instagram/TikTok stories. Content stays inside
@@ -555,41 +562,52 @@
     return sc;
   }
 
-  // Picker: preview every layout from the current passport, pick one to save/share.
+  // Picker: preview every layout from the current passport, select one, then
+  // share it (phones) or download it.
   const dlg = $('storyDlg'), grid = $('storyGrid');
-  let stories = [];
+  const canShareFiles = () => matchMedia('(pointer: coarse)').matches && !!navigator.canShare &&
+    navigator.canShare({ files: [new File([''], 'x.png', { type: 'image/png' })] });
+  let stories = [], picked = 0;
+  function pick(i) {
+    picked = i;
+    [...grid.children].forEach((b, j) => b.setAttribute('aria-checked', String(j === i)));
+  }
   $('story').onclick = async () => {
     if (!img) return;
     grid.innerHTML = '';
     stories = LAYOUTS.map(l => ({ l, canvas: renderStory(l) }));
     stories.forEach((st, i) => {
       const b = document.createElement('button');
-      b.type = 'button'; b.className = 'story-opt';
+      b.type = 'button'; b.className = 'story-opt'; b.setAttribute('role', 'radio');
       const th = new Image(); th.alt = ''; th.src = st.canvas.toDataURL('image/jpeg', .8);
       const cap = document.createElement('span'); cap.textContent = st.l.name;
-      b.append(th, cap); b.onclick = () => saveStory(i);
+      b.append(th, cap); b.onclick = () => pick(i);
       grid.append(b);
     });
+    pick(0);
+    $('storyShare').hidden = !canShareFiles();
     dlg.showModal();
-    // pre-encode so the share sheet opens straight from the tap (keeps user activation)
+    // pre-encode so Share opens the share sheet straight from the tap (keeps user activation)
     await Promise.all(stories.map(async st => {
       st.blob = await new Promise(r => st.canvas.toBlob(r, 'image/png'));
     }));
   };
-  async function saveStory(i) {
-    const st = stories[i];
+  async function pickedFile() {
+    const st = stories[picked];
     const blob = st.blob || await new Promise(r => st.canvas.toBlob(r, 'image/png'));
     const name = fileName().replace('.png', `-story-${st.l.id}.png`);
-    const file = new File([blob], name, { type: 'image/png' });
-    // On phones, open the share sheet so it can go straight to an Instagram story.
-    if (matchMedia('(pointer: coarse)').matches && navigator.canShare?.({ files: [file] })) {
-      try { await navigator.share({ files: [file] }); dlg.close(); return; }
-      catch (e) { if (e.name === 'AbortError') return; }
-    }
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; a.click();
-    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
-    dlg.close();
+    return { blob, name };
   }
+  $('storySave').onclick = async () => {
+    const { blob, name } = await pickedFile();
+    saveBlob(blob, name);
+    dlg.close();
+  };
+  $('storyShare').onclick = async () => {
+    const { blob, name } = await pickedFile();
+    try { await navigator.share({ files: [new File([blob], name, { type: 'image/png' })] }); dlg.close(); }
+    catch (e) { if (e.name !== 'AbortError') saveBlob(blob, name); }
+  };
   $('storyClose').onclick = () => dlg.close();
   dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
 

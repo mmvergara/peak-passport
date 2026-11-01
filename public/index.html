@@ -37,9 +37,10 @@
           Share as Story
         </button>
         <button class="btn" id="download" disabled>Download</button>
-        <button class="btn ghost" id="reset">Reset</button>
+        <button class="btn icon-btn" id="reset" type="button" aria-label="Reset passport" title="Reset">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M4 3.5v5h5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
       </div>
-      <p class="note story-hint"><b>Share as Story</b> is recommended: a 9:16 image ready for Instagram &amp; TikTok stories.</p>
     </section>
 
     <section class="controls" aria-label="Passport details">
@@ -111,8 +112,12 @@
       <h2 id="storyTitle">Pick a story layout</h2>
       <button class="btn small" id="storyClose" type="button">Close</button>
     </div>
-    <p class="note">Tap one to save it (on phones, share straight to your Instagram story).</p>
-    <div class="story-grid" id="storyGrid"></div>
+    <p class="note">Pick a layout, then share it or download it.</p>
+    <div class="story-grid" id="storyGrid" role="radiogroup" aria-label="Story layout"></div>
+    <div class="story-actions">
+      <button class="btn primary" id="storyShare" type="button" hidden>Share</button>
+      <button class="btn" id="storySave" type="button">Download</button>
+    </div>
   </dialog>
 
   <!-- Cloudflare Web Analytics (cookie-free) -->
