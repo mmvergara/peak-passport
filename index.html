@@ -9,15 +9,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Darumadrop+One&family=Fredoka:wght@500;600;700&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/webp" href="peak-logo.webp">
-  <link rel="apple-touch-icon" href="peak-logo.webp">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header class="top">
-    <div class="brand">
-      <img src="peak-logo.webp" alt="" width="44" height="44">
-      <span>PEAK <b>Passport Maker</b></span>
+    <div>
+      <div class="brand">
+        <span>PEAK <b>Passport Maker</b></span>
+      </div>
+      <p class="legal">Unofficial fan tool. Not affiliated with Aggro Crab or Landfall. Images stay in your browser.</p>
     </div>
     <p class="tag">Fan-made scout ID generator</p>
   </header>
@@ -45,6 +45,7 @@
           </span>
           <span><b>Upload scout pic</b><small>or drop / paste an image</small></span>
         </label>
+        <p class="note">Tip: take a screenshot of your scout in-game and upload it here.</p>
         <div class="row">
           <label class="grow">Zoom <input type="range" id="zoom" min="1" max="4" step="0.01" value="1"></label>
           <button class="btn small" id="center" type="button">Center</button>
@@ -81,7 +82,6 @@
         <div class="chips" id="biomes"></div>
       </fieldset>
 
-      <p class="legal">Unofficial fan tool. Not affiliated with Aggro Crab or Landfall. Images stay in your browser.</p>
     </section>
   </main>
 

@@ -27,7 +27,6 @@ body {
   max-width: 1320px; margin: 0 auto; padding: 22px 24px 8px;
 }
 .brand { display: flex; align-items: center; gap: 10px; font-size: 26px; font-weight: 700; color: var(--blue); letter-spacing: .02em; }
-.brand img { width: 44px; height: 44px; object-fit: contain; filter: drop-shadow(0 2px 0 rgba(110, 89, 70, .25)); }
 .brand b { color: var(--ink-d); font-weight: 600; }
 .tag { margin: 0; color: var(--ink); font-weight: 500; }
 
@@ -114,7 +113,7 @@ input[type="range"] { width: 100%; accent-color: var(--blue); }
 }
 .chip[aria-pressed="true"] { background: var(--c); border-color: var(--c); color: #fff; }
 
-.legal { margin: 0; font-size: 12px; color: var(--ink); text-align: center; }
+.legal { margin: 2px 0 0; font-size: 12px; color: var(--ink); }
 
 @media (max-width: 980px) {
   .layout { grid-template-columns: 1fr; padding: 8px 16px 40px; }

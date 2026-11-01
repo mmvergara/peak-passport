@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="peak-logo.webp" width="96" alt="PEAK logo">
-</p>
-
 <h1 align="center">PEAK Passport Maker</h1>
 
 <p align="center">make your own little scout passport 🏔️🎒</p>

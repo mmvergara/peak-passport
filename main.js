@@ -426,10 +426,18 @@
     [...line].forEach((ch, i) => ctx.fillText(ch, 74 + i * step, 966));
   }
 
+  function drawCredit() {
+    ctx.save();
+    ctx.textAlign = 'right'; ctx.textBaseline = 'alphabetic';
+    ctx.font = '500 26px Fredoka'; ctx.fillStyle = C.ink;
+    ctx.fillText('issued at peak-passport.vercel.app', 1724, 880);
+    ctx.restore();
+  }
+
   function draw() {
     ctx.clearRect(0, 0, W, H);
     drawBackground(); drawHeader(); drawPhoto(); drawCamera(); drawAscentBadge();
-    drawFields(); drawStamps(); drawMRZ();
+    drawFields(); drawStamps(); drawCredit(); drawMRZ();
   }
 
   function update() {
