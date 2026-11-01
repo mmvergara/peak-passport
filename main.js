@@ -442,7 +442,7 @@
 
   function update() {
     el.prefix.textContent = letter();
-    $('download').disabled = $('copy').disabled = !img;
+    $('download').disabled = $('copy').disabled = $('story').disabled = !img;
     document.querySelector('.req').hidden = !!img;
     save(); draw();
   }
@@ -453,6 +453,52 @@
     const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = fileName(); a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 2000);
   }, 'image/png');
+  // 1080x1920 portrait for Instagram/TikTok stories. Content stays inside
+  // y 250..1670 so the app's top bar and reply box don't cover it.
+  function renderStory() {
+    const SW = 1080, SH = 1920;
+    const sc = document.createElement('canvas'); sc.width = SW; sc.height = SH;
+    const s = sc.getContext('2d');
+    s.fillStyle = '#d3c8ab'; s.fillRect(0, 0, SW, SH);
+    s.fillStyle = 'rgba(110,89,70,.16)';
+    for (let y = 10; y < SH; y += 22) for (let x = 10; x < SW; x += 22) {
+      s.beginPath(); s.arc(x, y, 2.4, 0, Math.PI * 2); s.fill();
+    }
+    s.textAlign = 'center'; s.textBaseline = 'alphabetic';
+    s.font = '700 92px Fredoka';
+    const a = 'PEAK ', b = 'PASSPORT', aw = s.measureText(a).width, bw = s.measureText(b).width;
+    const x0 = (SW - aw - bw) / 2;
+    s.textAlign = 'left';
+    s.fillStyle = C.blue; s.fillText(a, x0, 560);
+    s.fillStyle = '#4d3d30'; s.fillText(b, x0 + aw, 560);
+    s.textAlign = 'center'; s.fillStyle = C.ink; s.font = '500 40px Fredoka';
+    s.fillText((S.name.trim() || 'Scout') + ' is ready for the climb', SW / 2, 630, 940);
+
+    const pw = 1000, ph = pw * H / W;
+    s.save(); s.translate(SW / 2, 960); s.rotate(-3 * Math.PI / 180);
+    s.shadowColor = 'rgba(77,61,48,.35)'; s.shadowBlur = 40; s.shadowOffsetY = 18;
+    s.drawImage(cv, -pw / 2, -ph / 2, pw, ph);
+    s.restore();
+
+    s.fillStyle = C.ink; s.font = '500 40px Fredoka';
+    s.fillText('make yours at', SW / 2, 1380);
+    s.fillStyle = '#4d3d30'; s.font = '600 54px Fredoka';
+    s.fillText('peak-passport.vercel.app', SW / 2, 1450);
+    return sc;
+  }
+  $('story').onclick = async () => {
+    if (!img) return;
+    const blob = await new Promise(r => renderStory().toBlob(r, 'image/png'));
+    const name = fileName().replace('.png', '-story.png');
+    const file = new File([blob], name, { type: 'image/png' });
+    // On phones, open the share sheet so it can go straight to an Instagram story.
+    if (matchMedia('(pointer: coarse)').matches && navigator.canShare?.({ files: [file] })) {
+      try { await navigator.share({ files: [file] }); return; }
+      catch (e) { if (e.name === 'AbortError') return; }
+    }
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  };
   $('copy').onclick = async e => {
     if (!img) return;
     const btn = e.currentTarget, old = btn.textContent;
