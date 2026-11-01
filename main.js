@@ -453,52 +453,142 @@
     const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = fileName(); a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 2000);
   }, 'image/png');
+  // ---------- story export ----------
   // 1080x1920 portrait for Instagram/TikTok stories. Content stays inside
   // y 250..1670 so the app's top bar and reply box don't cover it.
-  function renderStory() {
-    const SW = 1080, SH = 1920;
-    const sc = document.createElement('canvas'); sc.width = SW; sc.height = SH;
-    const s = sc.getContext('2d');
-    s.fillStyle = '#d3c8ab'; s.fillRect(0, 0, SW, SH);
-    s.fillStyle = 'rgba(110,89,70,.16)';
-    for (let y = 10; y < SH; y += 22) for (let x = 10; x < SW; x += 22) {
-      s.beginPath(); s.arc(x, y, 2.4, 0, Math.PI * 2); s.fill();
-    }
-    s.textAlign = 'center'; s.textBaseline = 'alphabetic';
-    s.font = '700 92px Fredoka';
-    const a = 'PEAK ', b = 'PASSPORT', aw = s.measureText(a).width, bw = s.measureText(b).width;
-    const x0 = (SW - aw - bw) / 2;
-    s.textAlign = 'left';
-    s.fillStyle = C.blue; s.fillText(a, x0, 560);
-    s.fillStyle = '#4d3d30'; s.fillText(b, x0 + aw, 560);
-    s.textAlign = 'center'; s.fillStyle = C.ink; s.font = '500 40px Fredoka';
-    s.fillText((S.name.trim() || 'Scout') + ' is ready for the climb', SW / 2, 630, 940);
+  const SW = 1080, SH = 1920, URL_TXT = 'peak-passport.vercel.app';
+  const scoutName = () => S.name.trim() || 'Scout';
 
-    const pw = 1000, ph = pw * H / W;
-    s.save(); s.translate(SW / 2, 960); s.rotate(-3 * Math.PI / 180);
-    s.shadowColor = 'rgba(77,61,48,.35)'; s.shadowBlur = 40; s.shadowOffsetY = 18;
+  function dots(s, color, step = 22, r = 2.4) {
+    s.fillStyle = color;
+    for (let y = 10; y < SH; y += step) for (let x = 10; x < SW; x += step) {
+      s.beginPath(); s.arc(x, y, r, 0, Math.PI * 2); s.fill();
+    }
+  }
+  function title(s, y, a, b, size = 92) {
+    s.font = `700 ${size}px Fredoka`; s.textAlign = 'left'; s.textBaseline = 'alphabetic';
+    const aw = s.measureText('PEAK ').width, bw = s.measureText('PASSPORT').width, x0 = (SW - aw - bw) / 2;
+    s.fillStyle = a; s.fillText('PEAK ', x0, y);
+    s.fillStyle = b; s.fillText('PASSPORT', x0 + aw, y);
+    s.textAlign = 'center';
+  }
+  function line(s, text, y, color, font) {
+    s.textAlign = 'center'; s.textBaseline = 'alphabetic';
+    s.fillStyle = color; s.font = font; s.fillText(text, SW / 2, y, 960);
+  }
+  function passport(s, cx, cy, pw, deg, shadow) {
+    const ph = pw * H / W;
+    s.save(); s.translate(cx, cy); s.rotate(deg * Math.PI / 180);
+    s.shadowColor = shadow; s.shadowBlur = 44; s.shadowOffsetY = 20;
     s.drawImage(cv, -pw / 2, -ph / 2, pw, ph);
     s.restore();
+  }
+  function mountains(s, layers) {
+    layers.forEach(([color, top, seed], i) => {
+      const r = seeded(seed);
+      s.fillStyle = color; s.beginPath(); s.moveTo(0, SH);
+      let x = 0; s.lineTo(0, top + r() * 120);
+      while (x < SW) {
+        x += 140 + r() * 160; s.lineTo(x - 70, top - 60 - r() * 160); s.lineTo(x, top + r() * 120);
+      }
+      s.lineTo(SW, SH); s.closePath(); s.fill();
+    });
+  }
 
-    s.fillStyle = C.ink; s.font = '500 40px Fredoka';
-    s.fillText('make yours at', SW / 2, 1380);
-    s.fillStyle = '#4d3d30'; s.font = '600 54px Fredoka';
-    s.fillText('peak-passport.vercel.app', SW / 2, 1450);
+  const LAYOUTS = [
+    { id: 'paper', name: 'Paper', draw(s) {
+      s.fillStyle = '#d3c8ab'; s.fillRect(0, 0, SW, SH);
+      dots(s, 'rgba(110,89,70,.16)');
+      title(s, 560, C.blue, '#4d3d30');
+      line(s, scoutName() + ' is ready for the climb', 630, C.ink, '500 40px Fredoka');
+      passport(s, SW / 2, 960, 1000, -3, 'rgba(77,61,48,.35)');
+      line(s, 'make yours at', 1380, C.ink, '500 40px Fredoka');
+      line(s, URL_TXT, 1450, '#4d3d30', '600 54px Fredoka');
+    } },
+    { id: 'summit', name: 'Summit', draw(s) {
+      const g = s.createLinearGradient(0, 0, 0, SH);
+      g.addColorStop(0, '#5b93dc'); g.addColorStop(.55, '#a9cdf0'); g.addColorStop(1, '#f2dcb0');
+      s.fillStyle = g; s.fillRect(0, 0, SW, SH);
+      s.fillStyle = 'rgba(255,255,255,.75)';
+      [[160, 360, 70], [860, 300, 90], [620, 470, 55]].forEach(([x, y, w]) => {
+        s.beginPath(); s.ellipse(x, y, w * 1.6, w * .55, 0, 0, Math.PI * 2); s.fill();
+        s.beginPath(); s.ellipse(x - w * .4, y - w * .35, w * .7, w * .5, 0, 0, Math.PI * 2); s.fill();
+      });
+      mountains(s, [['#9ab3cf', 1300, 11], ['#b39b80', 1420, 23], ['#8a7259', 1560, 37]]);
+      title(s, 560, '#ffffff', '#ffffff');
+      line(s, scoutName() + ' made it to the summit', 630, '#ffffff', '500 40px Fredoka');
+      passport(s, SW / 2, 950, 980, 0, 'rgba(30,50,90,.35)');
+      line(s, 'make yours at', 1480, '#fff6df', '500 40px Fredoka');
+      line(s, URL_TXT, 1550, '#fff6df', '600 54px Fredoka');
+    } },
+    { id: 'ascent', name: 'Ascent', draw(s) {
+      const t = SASH[+S.ascent];
+      const g = s.createLinearGradient(0, 0, SW, SH);
+      g.addColorStop(0, t.c); g.addColorStop(1, t.d);
+      s.fillStyle = g; s.fillRect(0, 0, SW, SH);
+      if (t.cosmic) {
+        const r = seeded(99);
+        for (let i = 0; i < 220; i++) {
+          s.fillStyle = r() > .7 ? '#ffe9a8' : '#cfe0ff';
+          s.beginPath(); s.arc(r() * SW, r() * SH, .8 + r() * 2.6, 0, Math.PI * 2); s.fill();
+        }
+      } else {
+        s.save(); s.globalAlpha = .1; s.strokeStyle = '#fff'; s.lineWidth = 40;
+        for (let x = -SH; x < SW; x += 120) { s.beginPath(); s.moveTo(x, SH); s.lineTo(x + SH, 0); s.stroke(); }
+        s.restore();
+      }
+      title(s, 540, '#fff6df', '#fff6df');
+      line(s, t.name.toUpperCase(), 620, 'rgba(255,246,223,.85)', '600 44px Fredoka');
+      passport(s, SW / 2, 960, 1000, 2, 'rgba(0,0,0,.4)');
+      line(s, 'make yours at', 1380, 'rgba(255,246,223,.85)', '500 40px Fredoka');
+      line(s, URL_TXT, 1450, '#fff6df', '600 54px Fredoka');
+    } },
+  ];
+
+  function renderStory(layout) {
+    const sc = document.createElement('canvas'); sc.width = SW; sc.height = SH;
+    layout.draw(sc.getContext('2d'));
     return sc;
   }
+
+  // Picker: preview every layout from the current passport, pick one to save/share.
+  const dlg = $('storyDlg'), grid = $('storyGrid');
+  let stories = [];
   $('story').onclick = async () => {
     if (!img) return;
-    const blob = await new Promise(r => renderStory().toBlob(r, 'image/png'));
-    const name = fileName().replace('.png', '-story.png');
+    grid.innerHTML = '';
+    stories = LAYOUTS.map(l => ({ l, canvas: renderStory(l) }));
+    stories.forEach((st, i) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'story-opt';
+      const th = new Image(); th.alt = ''; th.src = st.canvas.toDataURL('image/jpeg', .8);
+      const cap = document.createElement('span'); cap.textContent = st.l.name;
+      b.append(th, cap); b.onclick = () => saveStory(i);
+      grid.append(b);
+    });
+    dlg.showModal();
+    // pre-encode so the share sheet opens straight from the tap (keeps user activation)
+    await Promise.all(stories.map(async st => {
+      st.blob = await new Promise(r => st.canvas.toBlob(r, 'image/png'));
+    }));
+  };
+  async function saveStory(i) {
+    const st = stories[i];
+    const blob = st.blob || await new Promise(r => st.canvas.toBlob(r, 'image/png'));
+    const name = fileName().replace('.png', `-story-${st.l.id}.png`);
     const file = new File([blob], name, { type: 'image/png' });
     // On phones, open the share sheet so it can go straight to an Instagram story.
     if (matchMedia('(pointer: coarse)').matches && navigator.canShare?.({ files: [file] })) {
-      try { await navigator.share({ files: [file] }); return; }
+      try { await navigator.share({ files: [file] }); dlg.close(); return; }
       catch (e) { if (e.name === 'AbortError') return; }
     }
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 2000);
-  };
+    dlg.close();
+  }
+  $('storyClose').onclick = () => dlg.close();
+  dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+
   $('copy').onclick = async e => {
     if (!img) return;
     const btn = e.currentTarget, old = btn.textContent;
