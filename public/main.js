@@ -442,7 +442,11 @@
 
   function update() {
     el.prefix.textContent = letter();
-    $('download').disabled = $('story').disabled = !img;
+    const sb = $('story');
+    if (img && sb.disabled) { // buttons just unlocked: point at the story export once
+      sb.classList.remove('nudge'); void sb.offsetWidth; sb.classList.add('nudge');
+    }
+    $('download').disabled = sb.disabled = !img;
     document.querySelector('.req').hidden = !!img;
     save(); draw();
   }
