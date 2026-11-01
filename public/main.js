@@ -259,34 +259,72 @@
     ctx.restore();
   }
 
+  // Ascent medal: sash-colored rosette with ribbon tails, number in the middle,
+  // and a two-line label (ASCENT n / animal name) beside it.
   function drawAscentBadge() {
-    const a = +S.ascent, t = SASH[a], cx = 300, cy = 854;
-    const label = a === 0 ? 'P' : String(a);
-    ctx.save(); ctx.translate(cx, cy);
-    ctx.beginPath();
-    for (let i = 0; i < 24; i++) { const r = i % 2 ? 40 : 50, th = i * Math.PI / 12; ctx.lineTo(Math.cos(th) * r, Math.sin(th) * r); }
-    ctx.closePath();
-    if (t.cosmic) {
-      const g = ctx.createRadialGradient(-12, -12, 4, 0, 0, 52);
+    const a = +S.ascent, t = SASH[a], cx = 290, cy = 842, R = 44;
+    const paint = () => {
+      if (!t.cosmic) return t.c;
+      const g = ctx.createRadialGradient(cx - 14, cy - 14, 4, cx, cy, R + 8);
       g.addColorStop(0, '#3b4fa8'); g.addColorStop(.6, '#1d2a66'); g.addColorStop(1, '#0b0f2a');
-      ctx.fillStyle = g; ctx.fill();
+      return g;
+    };
+    ctx.save();
+    ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+
+    // ribbon tails (drawn first so the rosette sits on top)
+    [[-1, 1], [1, -1]].forEach(([side]) => {
+      const x0 = cx + side * 14, x1 = cx + side * 30, y0 = cy + 20, y1 = cy + 82;
+      ctx.beginPath();
+      ctx.moveTo(x0 - 13, y0); ctx.lineTo(x0 + 13, y0);
+      ctx.lineTo(x1 + 13, y1); ctx.lineTo(x1, y1 - 12); ctx.lineTo(x1 - 13, y1);
+      ctx.closePath();
+      ctx.fillStyle = t.cosmic ? '#1d2a66' : t.c; ctx.fill();
+      ctx.lineWidth = 3; ctx.strokeStyle = t.d; ctx.stroke();
+      // a darker stripe down the middle of each tail
+      ctx.beginPath(); ctx.moveTo(x0, y0 + 4); ctx.lineTo(x1, y1 - 16);
+      ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(0,0,0,.18)'; ctx.stroke();
+    });
+
+    // scalloped rosette
+    ctx.beginPath();
+    const n = 16;
+    for (let i = 0; i < n; i++) {
+      const th = i * 2 * Math.PI / n, th2 = (i + .5) * 2 * Math.PI / n;
+      ctx.lineTo(cx + Math.cos(th) * (R - 5), cy + Math.sin(th) * (R - 5));
+      ctx.quadraticCurveTo(cx + Math.cos(th2) * (R + 7), cy + Math.sin(th2) * (R + 7),
+        cx + Math.cos(th + 2 * Math.PI / n) * (R - 5), cy + Math.sin(th + 2 * Math.PI / n) * (R - 5));
+    }
+    ctx.closePath();
+    ctx.fillStyle = paint(); ctx.fill();
+    ctx.lineWidth = 3; ctx.strokeStyle = t.d; ctx.stroke();
+    if (t.cosmic) {
       ctx.save(); ctx.clip();
-      let seed = 7; const r = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
-      for (let i = 0; i < 26; i++) {
-        const ang = r() * Math.PI * 2, rad = 33 + r() * 17;
+      const r = seeded(7);
+      for (let i = 0; i < 30; i++) {
+        const ang = r() * Math.PI * 2, rad = 30 + r() * 20;
         ctx.fillStyle = r() > .7 ? '#ffe9a8' : '#cfe0ff';
-        ctx.beginPath(); ctx.arc(Math.cos(ang) * rad, Math.sin(ang) * rad, .8 + r() * 1.6, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(cx + Math.cos(ang) * rad, cy + Math.sin(ang) * rad, .8 + r() * 1.6, 0, Math.PI * 2); ctx.fill();
       }
       ctx.restore();
-    } else { ctx.fillStyle = t.c; ctx.fill(); }
-    ctx.lineJoin = 'round'; ctx.lineWidth = 3; ctx.strokeStyle = t.d; ctx.stroke();
-    ctx.fillStyle = '#fff6df'; ctx.beginPath(); ctx.arc(0, 0, 32, 0, Math.PI * 2); ctx.fill();
+    }
+    // dashed stitch ring + cream center
+    ctx.setLineDash([5, 5]); ctx.lineWidth = 2.5; ctx.strokeStyle = 'rgba(255,246,223,.75)';
+    ctx.beginPath(); ctx.arc(cx, cy, R - 11, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = '#fff6df'; ctx.beginPath(); ctx.arc(cx, cy, 25, 0, Math.PI * 2); ctx.fill();
     ctx.lineWidth = 3; ctx.strokeStyle = t.d; ctx.stroke();
-    ctx.fillStyle = C.inkD; ctx.font = '700 34px Fredoka'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText(label, 0, 2);
+    ctx.fillStyle = C.inkD; ctx.font = '700 32px Fredoka'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(a === 0 ? 'P' : String(a), cx, cy + 2);
+
+    // label
+    const tx = cx + 66;
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = C.blue; ctx.font = '600 26px Fredoka';
+    ctx.fillText(a === 0 ? 'PEAK' : `ASCENT ${a}`, tx, cy - 8);
+    const animal = t.name.split('· ')[1].toUpperCase();
+    ctx.fillStyle = C.ink; fitText(animal, 545 - tx, '400', 40, '"Darumadrop One", Fredoka');
+    ctx.fillText(animal, tx, cy + 34);
     ctx.restore();
-    ctx.fillStyle = C.blue; ctx.font = '600 26px Fredoka'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-    ctx.fillText('ASCENT', cx + 64, cy + 2);
   }
 
   function fitText(text, maxW, weight, size, family) {

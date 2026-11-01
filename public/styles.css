@@ -51,7 +51,10 @@ canvas { display: block; width: 100%; height: auto; border-radius: 16px; touch-a
 }
 .btn:hover { background: #f3eee0; }
 .btn:active { transform: translateY(3px); box-shadow: 0 0 0 var(--edge); }
-.btn:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.btn:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+/* text fields: no blue ring, just a slightly darker border while typing */
+input:focus, select:focus { outline: none; }
+input[type="text"]:focus, input[type="date"]:focus, select:focus { border-color: var(--ink); }
 .btn.primary { background: var(--blue); color: #fff; border-color: var(--blue-d); box-shadow: 0 3px 0 var(--blue-d); }
 .btn.primary:hover { background: #6aa0e6; }
 .story-btn { display: inline-flex; align-items: center; gap: 8px; }
