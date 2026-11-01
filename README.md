@@ -1,14 +1,15 @@
-<h1 align="center">PEAK Passport Maker</h1>
+<h1 align="center"><a href="https://peak-passport.pages.dev">PEAK Passport Maker</a></h1>
 
-<p align="center">make your own little scout passport 🏔️🎒</p>
 
-<p align="center"><a href="https://peak-passport.pages.dev"><b>peak-passport.pages.dev</b></a></p>
 
-<p align="center"><a href="https://github.com/mmvergara/peak-passport/actions/workflows/deploy.yml"><img src="https://github.com/mmvergara/peak-passport/actions/workflows/deploy.yml/badge.svg" alt="Deploy to Cloudflare Pages"></a></p>
+<p align="center">
+  <a href="https://peak-passport.pages.dev"><img src="showcase.png" alt="PEAK Passport Maker: passport preview with the photo, identity and expedition stamp controls" width="900"></a>
+</p>
 
----
-
+<p align="center">  
 Upload your scout pic, write your name, pick your ascent sash, stamp the biomes you've climbed, and download a cozy PNG passport to show off.
+</p>
+
 
 ## ✨ What you can do
 
