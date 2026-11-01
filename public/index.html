@@ -22,7 +22,6 @@
       </div>
       <p class="legal">Unofficial fan tool. Not affiliated with Aggro Crab or Landfall. Images stay in your browser.</p>
     </div>
-    <p class="tag">Fan-made scout ID generator</p>
   </header>
 
   <main class="layout">
@@ -76,18 +75,27 @@
         </div>
         <p class="note">Letter comes from your name's first letter, like in-game.</p>
         <label>Nationality <input type="text" id="nationality" maxlength="14" value="CRABLAND" autocomplete="off"></label>
-        <div class="row">
-          <label class="grow">Date of issue <input type="date" id="issued"></label>
-          <label class="grow">Ascent
-            <select id="ascent"></select>
-          </label>
-        </div>
+        <label>Date of issue <input type="date" id="issued"></label>
+        <div class="lbl" id="ascentLbl">Ascent <span class="ascent-name" id="ascentName"></span></div>
+        <div class="ascents" id="ascent" role="radiogroup" aria-labelledby="ascentLbl"></div>
       </fieldset>
 
       <fieldset class="card">
         <legend>Expedition stamps</legend>
         <p class="note">Biomes you've reached. Locked ones show “?”.</p>
         <div class="chips" id="biomes"></div>
+      </fieldset>
+
+      <fieldset class="card oss">
+        <legend>Open source</legend>
+        <p class="note">Like it? Give it a star on GitHub, or help make it better with ideas, bug reports or code.</p>
+        <div class="oss-links">
+          <a class="btn primary" href="https://github.com/mmvergara/peak-passport" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2L2.9 9.4l6.3-.9z" fill="currentColor" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+            Star on GitHub
+          </a>
+          <a class="btn" href="https://github.com/mmvergara/peak-passport/issues" target="_blank" rel="noopener">Contribute</a>
+        </div>
       </fieldset>
 
       <div class="credit">

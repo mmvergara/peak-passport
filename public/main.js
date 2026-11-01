@@ -55,12 +55,33 @@
     { name: 'Ascent 8 · Scoutmaster', c: '#1d2a66', d: '#0b0f2a', cosmic: true }
   ];
   if (!(+S.ascent >= 0 && +S.ascent <= 8)) S.ascent = '8';
-  SASH.forEach((t, i) => el.ascent.add(new Option(t.name, String(i))));
 
   function syncForm() {
     el.name.value = S.name; el.digits.value = S.digits; el.nationality.value = S.nationality;
-    el.issued.value = S.issued; el.ascent.value = S.ascent;
-    renderChips();
+    el.issued.value = S.issued;
+    renderChips(); renderAscents();
+  }
+
+  // Ascent picker: one sash-colored badge per ascent, tap to select.
+  function renderAscents() {
+    const box = el.ascent; box.innerHTML = '';
+    SASH.forEach((t, i) => {
+      const on = String(i) === String(S.ascent);
+      const short = t.name.split('· ')[1];
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'ascent-opt' + (t.cosmic ? ' cosmic' : '');
+      b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', String(on));
+      b.setAttribute('aria-label', t.name); b.title = t.name;
+      b.style.setProperty('--c', t.c); b.style.setProperty('--d', t.d);
+      const dot = document.createElement('span'); dot.className = 'ascent-dot';
+      const num = document.createElement('span'); num.textContent = i === 0 ? 'P' : String(i);
+      dot.append(num);
+      const cap = document.createElement('span'); cap.className = 'ascent-cap'; cap.textContent = short;
+      b.append(dot, cap);
+      b.onclick = () => { S.ascent = String(i); renderAscents(); update(); };
+      box.append(b);
+    });
+    $('ascentName').textContent = '· ' + SASH[+S.ascent].name.replace(/^Ascent /, '');
   }
 
   function renderChips() {
@@ -86,7 +107,6 @@
   el.digits.addEventListener('blur', () => { S.digits = S.digits.padEnd(9, '0'); el.digits.value = S.digits; update(); });
   el.nationality.addEventListener('input', () => { S.nationality = el.nationality.value; update(); });
   el.issued.addEventListener('input', () => { S.issued = el.issued.value; update(); });
-  el.ascent.addEventListener('change', () => { S.ascent = el.ascent.value; update(); });
   $('reroll').onclick = () => { S.digits = rnd9(); el.digits.value = S.digits; update(); };
   el.zoom.addEventListener('input', () => { view.zoom = +el.zoom.value; clampView(); draw(); });
   $('center').onclick = () => { view.ox = 0; view.oy = 0; draw(); };
