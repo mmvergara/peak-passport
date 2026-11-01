@@ -16,7 +16,7 @@ Upload your scout pic, write your name, pick your ascent sash, stamp the biomes 
 - 🪪 **Fill in your ID**: name, passport no., nationality (CRABLAND, obviously), and date of issue.
 - 🎀 **Pick your ascent**: the badge takes your sash color, from Tadpole all the way to Scoutmaster.
 - 🗺️ **Collect stamps**: Shore, Tropics, Roots, Alpine, Mesa, Caldera, Gloom, The Kiln, The Citadel, Peak, plus the secret Tomb and Nadir 👀
-- 💾 **Download or copy** your finished passport as a PNG.
+- 💾 **Download** your finished passport as a PNG.
 - 📱 **Share to your story**: pick a 9:16 layout (Paper, Summit, Ascent) and post it straight to Instagram.
 
 ## 🧗 Run it

@@ -442,7 +442,7 @@
 
   function update() {
     el.prefix.textContent = letter();
-    $('download').disabled = $('copy').disabled = $('story').disabled = !img;
+    $('download').disabled = $('story').disabled = !img;
     document.querySelector('.req').hidden = !!img;
     save(); draw();
   }
@@ -588,17 +588,6 @@
   }
   $('storyClose').onclick = () => dlg.close();
   dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
-
-  $('copy').onclick = async e => {
-    if (!img) return;
-    const btn = e.currentTarget, old = btn.textContent;
-    try {
-      const blob = await new Promise(r => cv.toBlob(r, 'image/png'));
-      await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-      btn.textContent = 'Copied!';
-    } catch (err) { btn.textContent = 'Copy blocked'; }
-    setTimeout(() => (btn.textContent = old), 1600);
-  };
 
   syncForm(); update();
   Promise.all(['700 40px Fredoka', '600 40px Fredoka', '40px "Darumadrop One"', '700 40px "Space Mono"']
