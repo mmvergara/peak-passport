@@ -3,7 +3,7 @@
 
 
 <p align="center">
-  <a href="https://peak-passport.pages.dev"><img src="showcase.png" alt="PEAK Passport Maker: passport preview with the photo, identity and expedition stamp controls" width="900"></a>
+  <a href="https://peak-passport.pages.dev"><img src="showcase2.png" alt="PEAK Passport Maker: passport preview with the photo, identity and expedition stamp controls" width="900"></a>
 </p>
 
 <p align="center">  
