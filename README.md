@@ -4,6 +4,8 @@
 
 <p align="center"><a href="https://peak-passport.pages.dev"><b>peak-passport.pages.dev</b></a></p>
 
+<p align="center"><a href="https://github.com/mmvergara/peak-passport/actions/workflows/deploy.yml"><img src="https://github.com/mmvergara/peak-passport/actions/workflows/deploy.yml/badge.svg" alt="Deploy to Cloudflare Pages"></a></p>
+
 ---
 
 Upload your scout pic, write your name, pick your ascent sash, stamp the biomes you've climbed, and download a cozy PNG passport to show off.
@@ -29,7 +31,9 @@ open public/index.html   # or xdg-open on linux
 
 ## 🚀 Deploy
 
-Hosted on Cloudflare Pages. Deploys upload only the `public/` folder.
+Hosted on [Cloudflare Pages](https://pages.cloudflare.com). Every push to `main` deploys automatically through GitHub Actions (`.github/workflows/deploy.yml`), uploading only the `public/` folder.
+
+To deploy by hand instead:
 
 ```sh
 npm install

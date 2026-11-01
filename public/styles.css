@@ -115,6 +115,21 @@ input[type="range"] { width: 100%; accent-color: var(--blue); }
 
 .legal { margin: 2px 0 0; font-size: 12px; color: var(--ink); }
 
+/* creator credit (page only, never drawn on exports) */
+.credit { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; margin-top: 4px; color: var(--ink); font-weight: 500; }
+.credit p { margin: 0; }
+.credit b { color: var(--ink-d); font-weight: 600; }
+.heart { color: #d24f43; }
+.socials { display: flex; gap: 8px; }
+.socials a {
+  width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; color: var(--ink-d);
+  background: var(--paper-2); border: 2px solid var(--edge); box-shadow: 0 3px 0 var(--edge);
+}
+.socials a:hover { color: var(--blue); border-color: var(--blue); }
+.socials a:active { transform: translateY(3px); box-shadow: none; }
+.socials a:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.socials svg { width: 20px; height: 20px; fill: currentColor; }
+
 @media (max-width: 980px) {
   .layout { grid-template-columns: 1fr; padding: 8px 16px 40px; }
   .top { padding: 18px 16px 6px; }
